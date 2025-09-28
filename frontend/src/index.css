@@ -1,0 +1,422 @@
+/* Import the Lato font */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #0f1419 0%, #1a2332 25%, #2d3748 50%, #1a2332 75%, #0f1419 100%);
+  background-attachment: fixed;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(0, 123, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(76, 175, 80, 0.1) 0%, transparent 50%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 98px,
+      rgba(0, 123, 255, 0.03) 100px,
+      rgba(0, 123, 255, 0.03) 102px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 98px,
+      rgba(255, 107, 53, 0.03) 100px,
+      rgba(255, 107, 53, 0.03) 102px
+    );
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::after {
+  content: '🐳 ☸️ 🔧 ⚙️ 🚀 📊 🔒 ☁️ 🏗️ 📈';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 24px;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(2deg); }
+  50% { transform: translateY(5px) rotate(-1deg); }
+  75% { transform: translateY(-5px) rotate(1deg); }
+}
+
+code {
+  font-family: "Lato", source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+.appHideScroll {
+  overflow: hidden !important;
+}
+
+.appScroll {
+  overflow: auto !important; /* Using 'auto' for better default behavior */
+}
+
+.appScrollY {
+  overflow-y: scroll;
+}
+
+.appScrollX {
+  overflow-x: scroll;
+}
+
+.appScroll::-webkit-scrollbar {
+  display: none;
+  width: 0.375rem;
+  height: 0.25rem;
+}
+
+.appScroll:hover::-webkit-scrollbar {
+  display: inline;
+}
+
+.appScroll::-webkit-scrollbar-thumb {
+  background-color: #d3d3d3;
+  border-radius: 1.5rem;
+}
+
+.appScroll::-webkit-scrollbar:hover {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.appScrollHover::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+/* Width Classes */
+
+.appWidth100 {
+  width: 100%;
+}
+
+.appWidth50 {
+  width: 50%;
+}
+
+.appWidth75 {
+  width: 75%;
+}
+
+.appWidthInherit {
+  width: inherit;
+}
+
+.appWidthCustom {
+  width: var(--width);
+}
+
+/* Height Classes */
+
+.appHeight100 {
+  height: 100%;
+}
+.appFixedHeight100 {
+  height: calc(100vh - 5rem);
+}
+
+.appHeightInherit {
+  height: inherit;
+}
+
+.appHeightCustom {
+  height: var(--height);
+}
+
+/* Text Transform Classes */
+
+.appTextBold {
+  font-family: "Lato";
+  font-weight: bold; /* Removed !important for better specificity */
+}
+
+.appTextWeight400 {
+  font-family: "Lato";
+  font-weight: 400;
+}
+
+.appTextWeight500 {
+  font-family: "Lato";
+  font-weight: 500;
+}
+
+.appTextWeight600 {
+  font-family: "Lato";
+  font-weight: 600;
+}
+
+.appTextWeight700 {
+  font-family: "Lato";
+  font-weight: 700;
+}
+
+.appTextCapitalize {
+  text-transform: capitalize;
+}
+
+.appTextLowerCase {
+  text-transform: lowercase;
+}
+
+.appTextUpperCase {
+  text-transform: uppercase;
+}
+li {
+   color : white;
+}
+/* Text Align Classes */
+.MuiGrid-root.MuiGrid-item.userMessage {
+  margin-right: 0.5rem;
+  text-align: start;
+  padding: 10px !important;
+  max-width: 75%;
+  /* background: #f5f7fa; */
+  border-radius: 8px;
+  flex: none;
+}
+
+.MuiGrid-root.MuiGrid-item.botMessage {
+  margin-left: 0.5rem;
+  text-align: start;
+  padding: 10px !important;
+  max-width: 75%;
+  /* background: #e1ebff; */
+  border-radius: 8px;
+  flex: none;
+}
+
+.MuiGrid-root.MuiGrid-container.MuiGrid-item.sendMessageContainer {
+  padding: 0px 24px;
+  margin-top: 1rem;
+  /* margin-left: 1rem; */
+  border-radius: 40px;
+}
+.MuiGrid-root.MuiGrid-container.MuiGrid-item.sendMessageContainer{
+  background: #f4f4f4;
+}
+
+.MuiButton-root.attachmentButton {
+  border-radius: 50%;
+  margin-left: 8px;
+  padding: 0.5rem;
+  height: 3.5rem;
+  width: 3.5rem;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+p#USERCHATINPUT-helper-text {
+  padding-bottom: 12px;
+}
+.MuiTypography-h4.chatHeaderText {
+  text-align: start;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-style: normal;
+  font-weight: 600;
+}
+/* Base styles for .chatScrollContainer */
+.chatScrollContainer {
+  overflow-y: auto;
+}
+
+/* for bot file check reply */
+
+@keyframes backgroundTransitionGreen {
+  0% {
+    background-color: #e1ebff; /* Initial blue color */
+  }
+  100% {
+    background-color: #004D77; /* Final green color */
+  }
+}
+
+@keyframes backgroundTransitionRed {
+  0% {
+    background-color: #e1ebff; /* Initial blue color */
+  }
+  100% {
+    background-color: red; /* Final red color */
+  }
+}
+
+@keyframes loadingSpinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #004D77;
+  animation: loadingSpinner 1s linear infinite;
+}
+
+.file-status-box {
+  border: 1px solid #004D77;
+  border-radius: 1rem;
+  padding: 4px 12px;
+  margin-top: 4px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-status-box.success {
+  animation: backgroundTransitionGreen 1s forwards;
+  background-color: green;
+  color: white;
+}
+
+.file-status-box.fail {
+  animation: backgroundTransitionRed 1s forwards;
+  background-color: red;
+  color: white;
+}
+/* Typing indicator animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typing-indicator {
+  display: inline-block;
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+.sources-section {
+  margin-top: 12px;
+  padding-left: 8px;
+}
+
+.sources-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.95em;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.sources-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.sources-list li {
+  margin-bottom: 2px;
+}
+
+.sources-link {
+  color: #1976d2;
+  font-size: 0.95em;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.sources-link:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+
+.feedback-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 50%;
+  padding: 6px;
+  transition: background 0.2s, transform 0.2s, color 0.2s;
+  color: #1976d2;
+  opacity: 0.7;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedback-btn:last-child {
+  margin-right: 0;
+}
+
+.feedback-btn.selected,
+.feedback-btn:hover:not(:disabled) {
+  background: #e3f2fd;
+  color: #004D77;
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.feedback-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.feedback-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes typing {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.MuiCard-root {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.MuiDialog-paper {
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(15px);
+}

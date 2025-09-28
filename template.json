@@ -1,0 +1,182 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Amazon Q Business Integration with API Gateway and Lambda for Chat and Feedback",
+    "Parameters": {
+    "ApplicationId": {
+      "Type":        "String",
+      "Description": "Amazon Q Business Application ID (passed from CodeBuild)"
+    }
+  },
+    "Resources": {
+      "AmazonQBusinessFunction": {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "FunctionName": "drtx-chatFunction",
+          "Handler": "index.handler",
+          "Role": { "Fn::GetAtt": ["LambdaExecutionRole", "Arn"] },
+          "Code": {
+            "ZipFile": {
+              "Fn::Sub": ["const { QBusinessClient, ChatSyncCommand } = require('@aws-sdk/client-qbusiness');\n\nexports.handler = async (event) => {\n  try {\n    // Enable CORS\n    const headers = {\n      \"Access-Control-Allow-Origin\": \"*\",\n      \"Access-Control-Allow-Headers\": \"Content-Type,X-Amz-Date,Authorization,X-Api-Key\",\n      \"Access-Control-Allow-Methods\": \"OPTIONS,POST\"\n    };\n    \n    // Handle preflight OPTIONS request\n    if (event.httpMethod === 'OPTIONS') {\n      return {\n        statusCode: 200,\n        headers,\n        body: ''\n      };\n    }\n    \n    // Parse request body\n    const body = JSON.parse(event.body);\n    const { message, conversationId, parentMessageId } = body;\n    \n    console.log('Request body:', body);\n    \n    // Prepare parameters\n    const params = {\n      applicationId: \"${ApplicationId}\",\n      userMessage: message\n    };\n    \n    if (conversationId) {\n      console.log(`Using conversation ID: ` + conversationId);\n      params.conversationId = conversationId;\n    }\n    \n    if (parentMessageId) {\n      console.log(`Using parent message ID: ` + parentMessageId);\n      params.parentMessageId = parentMessageId;\n    }\n    \n    console.log('Calling QBusiness API with params:', JSON.stringify(params));\n    \n    // Call QBusiness API\n    const client = new QBusinessClient({ region: \"us-west-2\" });\n    const cmd = new ChatSyncCommand(params);\n    const response = await client.send(cmd);\n    \n    console.log('Response received:', JSON.stringify(response));\n    \n    return {\n      statusCode: 200,\n      headers,\n      body: JSON.stringify(response)\n    };\n  } catch (error) {\n    console.error('Error:', error);\n    \n    return {\n      statusCode: 500,\n      headers: {\n        \"Access-Control-Allow-Origin\": \"*\",\n        \"Access-Control-Allow-Headers\": \"Content-Type,X-Amz-Date,Authorization,X-Api-Key\"\n      },\n      body: JSON.stringify({ \n        error: error.message,\n        stack: error.stack\n      })\n    };\n  }\n};",{
+            "ApplicationId": { "Ref": "ApplicationId" }
+          }]          }
+              },
+          "Runtime": "nodejs18.x",
+          "Timeout": 30,
+          "MemorySize": 256,
+          "Layers": [
+            "arn:aws:lambda:us-west-2:580247275435:layer:LambdaInsightsExtension:14"
+          ]
+        }
+      },
+
+      "LambdaExecutionRole": {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "lambda.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          },
+          "ManagedPolicyArns": [
+            "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+          ],
+          "Policies": [
+            {
+              "PolicyName": "QBusinessAccess",
+              "PolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Action": [
+                      "qbusiness:ChatSync",
+                      "qbusiness:ListApplications"
+                    ],
+                    "Resource": "*"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "AmazonQBusinessAPI": {
+        "Type": "AWS::ApiGateway::RestApi",
+        "Properties": {
+          "Name": "AmazonQBusinessAPI",
+          "Description": "API for Amazon Q Business Integration",
+          "EndpointConfiguration": {
+            "Types": ["REGIONAL"]
+          }
+        }
+      },
+      "ChatResource": {
+        "Type": "AWS::ApiGateway::Resource",
+        "Properties": {
+          "RestApiId": { "Ref": "AmazonQBusinessAPI" },
+          "ParentId": { "Fn::GetAtt": ["AmazonQBusinessAPI", "RootResourceId"] },
+          "PathPart": "chat"
+        }
+      },
+      "ChatMethod": {
+        "Type": "AWS::ApiGateway::Method",
+        "Properties": {
+          "RestApiId": { "Ref": "AmazonQBusinessAPI" },
+          "ResourceId": { "Ref": "ChatResource" },
+          "HttpMethod": "POST",
+          "AuthorizationType": "NONE",
+          "Integration": {
+            "Type": "AWS_PROXY",
+            "IntegrationHttpMethod": "POST",
+            "Uri": {
+              "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AmazonQBusinessFunction.Arn}/invocations"
+            }
+          }
+        }
+      },
+      "ChatOptionsMethod": {
+        "Type": "AWS::ApiGateway::Method",
+        "Properties": {
+          "RestApiId": { "Ref": "AmazonQBusinessAPI" },
+          "ResourceId": { "Ref": "ChatResource" },
+          "HttpMethod": "OPTIONS",
+          "AuthorizationType": "NONE",
+          "Integration": {
+            "Type": "MOCK",
+            "IntegrationResponses": [
+              {
+                "StatusCode": "200",
+                "ResponseParameters": {
+                  "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                  "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'",
+                  "method.response.header.Access-Control-Allow-Origin": "'*'"
+                },
+                "ResponseTemplates": {
+                  "application/json": ""
+                }
+              }
+            ],
+            "PassthroughBehavior": "WHEN_NO_MATCH",
+            "RequestTemplates": {
+              "application/json": "{\"statusCode\": 200}"
+            }
+          },
+          "MethodResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": true,
+                "method.response.header.Access-Control-Allow-Methods": true,
+                "method.response.header.Access-Control-Allow-Origin": true
+              }
+            }
+          ]
+        }
+      },
+
+      "ApiDeployment": {
+        "Type": "AWS::ApiGateway::Deployment",
+        "DependsOn": ["ChatMethod", "ChatOptionsMethod"],
+        "Properties": {
+          "RestApiId": { "Ref": "AmazonQBusinessAPI" },
+          "StageName": "prod"
+        }
+      },
+      "ChatLambdaPermission": {
+        "Type": "AWS::Lambda::Permission",
+        "Properties": {
+          "Action": "lambda:InvokeFunction",
+          "FunctionName": { "Ref": "AmazonQBusinessFunction" },
+          "Principal": "apigateway.amazonaws.com",
+          "SourceArn": {
+            "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AmazonQBusinessAPI}/*/POST/chat"
+          }
+        }
+      }
+    },
+    "Outputs": {
+      "ApiEndpoint": {
+        "Description": "API Gateway endpoint URL for Prod stage",
+        "Value": {
+          "Fn::Sub": "https://${AmazonQBusinessAPI}.execute-api.${AWS::Region}.amazonaws.com/prod/"
+        }
+      },
+      "ChatEndpoint": {
+        "Description": "Chat API endpoint URL",
+        "Value": {
+          "Fn::Sub": "https://${AmazonQBusinessAPI}.execute-api.${AWS::Region}.amazonaws.com/prod/chat"
+        }
+      },
+      "ChatLambdaFunction": {
+        "Description": "Chat Lambda Function ARN",
+        "Value": { "Fn::GetAtt": ["AmazonQBusinessFunction", "Arn"] }
+      }
+    }
+  }
