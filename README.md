@@ -1,11 +1,7 @@
 # 🚀 SkillOps - AI-Powered DevOps Career Platform
 
 <div align="center">
-  <img src="skillops_professional_thumbnail.png" alt="SkillOps Platform" width="800"/>
-  
-  **🏆 Hackathon Winner - Best Use of AI Personas**
-  
-  *Revolutionizing DevOps career development through specialized AI personas*
+  *Revolutionizing Software career development through specialized AI*
 </div>
 
 ---
@@ -26,17 +22,15 @@
 
 ## 🎯 Project Overview
 
-SkillOps is an innovative web application that leverages **Amazon Q Business** to provide personalized DevOps career guidance through specialized AI personas. This hackathon project demonstrates the **Best Use of AI Personas** by creating distinct, context-aware AI experts that adapt their communication style and expertise to user needs.
+SkillOps is an innovative web application that leverages LLM to provide personalized DevOps career guidance through specialized AI personas. This hackathon project demonstrates the AI by creating distinct, context-aware AI experts that adapt their communication style and expertise to user needs.
 
 ### 🎪 Hackathon Achievement
-- **Category**: Best Use of AI Personas
 - **Innovation**: 4 specialized AI personas with unique expertise domains
-- **Impact**: Personalized DevOps career development at scale
-- **Technology**: Amazon Q Business integration with advanced persona switching
+- **Impact**: Personalized Software career development at scale
 
 ---
 
-## 🤖 AI Personas
+## 🤖 AI Personas/Agents
 
 Our platform features four specialized AI personas, each with distinct expertise and communication styles:
 
